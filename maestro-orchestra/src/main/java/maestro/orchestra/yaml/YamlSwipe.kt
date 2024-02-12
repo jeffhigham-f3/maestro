@@ -47,6 +47,7 @@ class YamlSwipeDeserializer : JsonDeserializer<YamlSwipe>() {
         val label = getLabel(root)
         when {
             input.contains("start") || input.contains("end") -> {
+                println("Detected deserialized start and end!")
                 check(root.get("direction") == null) { "You cannot provide direction with start/end swipe." }
                 check(root.get("start") != null && root.get("end") != null) {
                     "You need to provide both start and end coordinates, to swipe with coordinates"
@@ -92,20 +93,22 @@ class YamlSwipeDeserializer : JsonDeserializer<YamlSwipe>() {
                 check(start.contains("%") && end.contains("%")) {
                     "You need to provide start and end coordinates with %, Found: (${start}, ${end})"
                 }
+                println("Hello $start $end")
                 val startPoints = start
                     .replace("%", "")
                     .split(",")
-                    .map { it.trim().toInt() }
+                    .map { it.trim() }
                 val endPoints = end
                     .replace("%", "")
                     .split(",")
-                    .map { it.trim().toInt() }
-                check(startPoints[0] in 0..100 && startPoints[1] in 0..100) {
-                    "Invalid start point: $start should be between 0 to 100"
-                }
-                check(endPoints[0] in 0..100 && endPoints[1] in 0..100) {
-                    "Invalid start point: $end should be between 0 to 100"
-                }
+                    .map { it.trim() }
+                println("Hello $startPoints $endPoints")
+//                check(startPoints[0] in 0..100 && startPoints[1] in 0..100) {
+//                    "Invalid start point: $start should be between 0 to 100"
+//                }
+//                check(endPoints[0] in 0..100 && endPoints[1] in 0..100) {
+//                    "Invalid start point: $end should be between 0 to 100"
+//                }
 
                 return YamlRelativeCoordinateSwipe(
                     start,

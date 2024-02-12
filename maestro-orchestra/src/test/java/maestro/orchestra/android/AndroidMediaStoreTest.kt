@@ -12,7 +12,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.MethodSource
 import java.nio.file.Paths
 
-@Disabled
 class AndroidMediaStoreTest {
 
     @ParameterizedTest
@@ -64,5 +63,12 @@ class AndroidMediaStoreTest {
                 mapOf("./src/test/resources/media/android/add_media_mp4.yaml" to "/sdcard/Movies/sample_video.mp4"),
             )
         }
+    }
+
+    @Test
+    fun `this is simple test`() {
+        val dadb = Dadb.create("localhost", 5555)
+        val maestro = Maestro.android(AndroidDriver(dadb))
+        println(maestro.deviceInfo())
     }
 }
