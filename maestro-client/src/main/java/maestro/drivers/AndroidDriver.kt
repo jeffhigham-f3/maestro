@@ -118,7 +118,6 @@ class AndroidDriver(
         return response.output.trim().toIntOrNull() ?: throw IOException("Invalid API level: ${response.output}")
     }
 
-
     private fun allocateForwarder() {
         PORT_TO_FORWARDER[hostPort]?.close()
         PORT_TO_ALLOCATION_POINT[hostPort]?.let {
@@ -459,7 +458,7 @@ class AndroidDriver(
             } catch (e: IOException) {
                 throw IOException(
                     "Failed to capture screen recording on the device. Note that some Android emulators do not support screen recording. " +
-                            "Try using a different Android emulator (eg. Pixel 5 / API 30)",
+                        "Try using a different Android emulator (eg. Pixel 5 / API 30)",
                     e,
                 )
             }
@@ -483,11 +482,15 @@ class AndroidDriver(
         }
     }
 
-    override fun openLink(link: String, appId: String?, autoVerify: Boolean, browser: Boolean) {
+    override fun openLink(link: String, appId: String?, autoVerify: Boolean, browser: Boolean, deepLink: Boolean) {
         if (browser) {
             openBrowser(link)
         } else {
-            dadb.shell("am start -a android.intent.action.VIEW -d \"$link\"")
+            if (deepLink && appId != null) {
+                dadb.shell("am start -a android.intent.action.VIEW -d \"$link\" $appId")
+            } else {
+                dadb.shell("am start -a android.intent.action.VIEW -d \"$link\"")
+            }
         }
 
         if (autoVerify) {
@@ -616,7 +619,11 @@ class AndroidDriver(
         }
     }
 
-    private fun waitForWindowToSettle(appId: String, initialHierarchy: ViewHierarchy?, timeoutMs: Int? = null): ViewHierarchy {
+    private fun waitForWindowToSettle(
+        appId: String,
+        initialHierarchy: ViewHierarchy?,
+        timeoutMs: Int? = null,
+    ): ViewHierarchy {
         val endTime = System.currentTimeMillis() + WINDOW_UPDATE_TIMEOUT_MS
         var hierarchy: ViewHierarchy? = null
         do {
@@ -666,7 +673,8 @@ class AndroidDriver(
 
     fun setDeviceLocale(country: String, language: String): Int {
         dadb.shell("pm grant dev.mobile.maestro android.permission.CHANGE_CONFIGURATION")
-        val response = dadb.shell("am broadcast -a dev.mobile.maestro.locale -n dev.mobile.maestro/.receivers.LocaleSettingReceiver --es lang $language --es country $country")
+        val response =
+            dadb.shell("am broadcast -a dev.mobile.maestro.locale -n dev.mobile.maestro/.receivers.LocaleSettingReceiver --es lang $language --es country $country")
         return extractSetLocaleResult(response.output)
     }
 
@@ -1006,7 +1014,6 @@ class AndroidDriver(
             throw throwable
         }
     }
-
 
     companion object {
 

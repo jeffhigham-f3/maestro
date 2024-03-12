@@ -24,7 +24,6 @@ import com.google.common.truth.Truth.assertThat
 import maestro.*
 import maestro.utils.ScreenshotUtils
 import okio.Sink
-import okio.Source
 import okio.buffer
 import java.awt.image.BufferedImage
 import java.io.File
@@ -267,7 +266,7 @@ class FakeDriver : Driver {
         events += Event.InputText(text)
     }
 
-    override fun openLink(link: String, appId: String?, autoVerify: Boolean, browser: Boolean) {
+    override fun openLink(link: String, appId: String?, autoVerify: Boolean, browser: Boolean, deepLink: Boolean) {
         ensureOpen()
 
         if (browser) {

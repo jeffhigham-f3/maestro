@@ -13,7 +13,6 @@ import maestro.TreeNode
 import maestro.ViewHierarchy
 import maestro.utils.ScreenshotUtils
 import okio.Sink
-import maestro.NamedSource
 import okio.buffer
 import org.openqa.selenium.By
 import org.openqa.selenium.JavascriptExecutor
@@ -299,7 +298,7 @@ class WebDriver(val isStudio: Boolean) : Driver {
         }
     }
 
-    override fun openLink(link: String, appId: String?, autoVerify: Boolean, browser: Boolean) {
+    override fun openLink(link: String, appId: String?, autoVerify: Boolean, browser: Boolean, deepLink: Boolean) {
         val driver = ensureOpen()
 
         driver.get(link)

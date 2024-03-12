@@ -383,7 +383,7 @@ class IOSDriver(
         runDeviceCall { iosDevice.input(text = text) }
     }
 
-    override fun openLink(link: String, appId: String?, autoVerify: Boolean, browser: Boolean) {
+    override fun openLink(link: String, appId: String?, autoVerify: Boolean, browser: Boolean, deepLink: Boolean) {
         iosDevice.openLink(link).expect {}
     }
 

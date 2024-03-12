@@ -67,7 +67,7 @@ interface Driver {
 
     fun inputText(text: String)
 
-    fun openLink(link: String, appId: String?, autoVerify: Boolean, browser: Boolean)
+    fun openLink(link: String, appId: String?, autoVerify: Boolean, browser: Boolean, deepLink: Boolean)
 
     fun hideKeyboard()
 
