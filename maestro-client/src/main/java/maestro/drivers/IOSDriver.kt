@@ -117,8 +117,8 @@ class IOSDriver(
         runDeviceCall { iosDevice.tap(point.x, point.y) }
     }
 
-    override fun longPress(point: Point) {
-        runDeviceCall { iosDevice.longPress(point.x, point.y, 3000) }
+    override fun longPress(point: Point, durationMs: Long) {
+        runDeviceCall { iosDevice.longPress(point.x, point.y, durationMs) }
     }
 
     override fun pressKey(code: KeyCode) {

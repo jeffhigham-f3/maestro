@@ -176,6 +176,7 @@ class Maestro(private val driver: Driver) : AutoCloseable {
         retryIfNoChange: Boolean = true,
         waitUntilVisible: Boolean = false,
         longPress: Boolean = false,
+        longPressDuration: Long? = null,
         appId: String? = null,
         tapRepeat: TapRepeat? = null,
         waitToSettleTimeoutMs: Int? = null
@@ -337,7 +338,7 @@ class Maestro(private val driver: Driver) : AutoCloseable {
         val retries = getNumberOfRetries(retryIfNoChange)
         repeat(retries) {
             if (longPress) {
-                driver.longPress(Point(x, y))
+                driver.longPress(Point(x, y), longPressDuration)
             } else if (tapRepeat != null) {
                 for (i in 0 until tapRepeat.repeat) {
 
