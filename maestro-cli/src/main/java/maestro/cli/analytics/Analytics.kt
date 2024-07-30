@@ -39,8 +39,7 @@ object Analytics {
         enable(SerializationFeature.INDENT_OUTPUT)
     }
 
-    val hasRunBefore: Boolean
-        get() = legacyUuidPath.exists() || analyticsStatePath.exists()
+    val hasRunBefore: Boolean = legacyUuidPath.exists() || analyticsStatePath.exists()
 
     private val analyticsState: AnalyticsState
         get() = JSON.readValue<AnalyticsState>(analyticsStatePath.readText())
@@ -70,24 +69,28 @@ object Analytics {
         }
     }
 
-    fun maybeAskToEnableAnalytics() {
+    fun maybeFirstRunExperience() {
         if (hasRunBefore) return
 
-        while (!Thread.interrupted()) {
-            println("Maestro CLI would like to collect anonymous usage data to improve the product.")
-            print("Enable analytics? [Y/n] ")
+        println(
+            """
+            ╔════════════════════════════════════════════════════════════════════════════╗
+            ║                 Welcome to Maestro! - https://maestro.mobile.dev           ║
+            ║                                                                            ║
+            ║ Maestro CLI reports completely anonymous usage statistics and crash report ║
+            ║ data. We use this data to improve Maestro over time.                       ║
+            ║                                                                            ║
+            ║ The analytics are not sent on this very first first run. To disable        ║
+            ║ reporting, type 'maestro --no-analytics'.                                  ║
+            ╚════════════════════════════════════════════════════════════════════════════╝
+            """.trimMargin()
+        )
 
-            val str = readlnOrNull()?.lowercase()
-            val granted = str?.isBlank() == true || str == "y" || str == "yes"
-            println(
-                if (granted) "Usage data collection enabled. Thank you!"
-                else "Usage data collection disabled."
-            )
-            saveAnalyticsState(granted)
-            return
-        }
+        saveAnalyticsState(granted = true)
+    }
 
-        error("Interrupted")
+    fun disableAnalytics() {
+        saveAnalyticsState(granted = false)
     }
 
     /**

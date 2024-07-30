@@ -24,17 +24,13 @@ import maestro.cli.command.*
 import maestro.cli.command.DownloadSamplesCommand
 import maestro.cli.command.LogoutCommand
 import maestro.cli.update.Updates
-import maestro.cli.util.AndroidEnvUtils
-import maestro.cli.util.EnvUtils
 import maestro.cli.util.ErrorReporter
-import maestro.cli.util.IOSEnvUtils
 import maestro.cli.view.box
 import maestro.debuglog.DebugLogStore
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
 import java.util.Properties
-import kotlin.random.Random
 import kotlin.system.exitProcess
 
 @Command(
@@ -76,6 +72,9 @@ class App {
 
     @Option(names = ["--device", "--udid"], description = ["(Optional) Device ID to run on explicitly, can be a comma separated list of IDs: --device \"Emulator_1,Emulator_2\" "])
     var deviceId: String? = null
+
+    @Option(names = ["--no-analytics"])
+    var noAnalytics: Boolean = false
 }
 
 private fun printVersion() {
@@ -92,11 +91,10 @@ fun main(args: Array<String>) {
     System.setProperty("apple.awt.UIElement", "true")
 
     Analytics.maybeMigrate()
-    Analytics.maybeAskToEnableAnalytics()
+    Analytics.maybeFirstRunExperience()
 
     Dependencies.install()
     Updates.fetchUpdatesAsync()
-    Analytics.maybeUploadAnalyticsAsync()
 
     val commandLine = CommandLine(App())
         .setUsageHelpWidth(160)
